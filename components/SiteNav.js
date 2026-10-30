@@ -9,7 +9,7 @@ const navLinks = [
   { label: "About Us", href: "#about" },
   { label: "Loans", href: "#loans" },
   { label: "Why DLL", href: "#why-dll" },
-  { label: "Customer Stories", href: "#stories" },
+  { label: "Reels & Stories", href: "#stories" },
   { label: "Contact", href: "#contact" },
 ];
 

@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
-import { heroSlides, loanMessages } from "../data/siteContent";
+import { ArrowRight, ChevronLeft, ChevronRight, MessageCircle, PhoneCall, ShieldCheck, Sparkles } from "lucide-react";
+import { brandTagline, contactPhone, formattedPhone, heroSlides, loanMessages, whatsappUrl } from "../data/siteContent";
 import RotatingText from "./RotatingText";
 import { Reveal } from "./MotionBits";
 
@@ -18,7 +18,7 @@ function HeroCarousel() {
     if (paused || reduceMotion || heroSlides.length < 2) return undefined;
     const timer = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % heroSlides.length);
-    }, 6200);
+    }, 1500);
     return () => window.clearInterval(timer);
   }, [paused, reduceMotion]);
 
@@ -44,10 +44,10 @@ function HeroCarousel() {
           <motion.div
             className="hero-photo-layer"
             key={activeSlide.id}
-            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 1.025 }}
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 1.02 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: reduceMotion ? 0.01 : 0.48, ease: "easeOut" }}
+            transition={{ duration: reduceMotion ? 0.01 : 0.28, ease: "easeInOut" }}
             role="group"
             aria-roledescription="slide"
             aria-label={`${activeIndex + 1} of ${heroSlides.length}: ${activeSlide.label}`}
@@ -90,8 +90,8 @@ function HeroCarousel() {
         </div>
       </div>
       <div className="hero-floating-note" aria-hidden="true">
-        <span className="hero-floating-icon"><Sparkles size={18} /></span>
-        <span><strong>One step at a time</strong><small>Clear, helpful guidance</small></span>
+        <span className="hero-floating-icon"><ShieldCheck size={18} /></span>
+        <span><strong>PAN India Service</strong><small>All Banks &amp; NBFCs</small></span>
       </div>
       <div className="hero-visual-orbit" aria-hidden="true" />
     </div>
@@ -104,25 +104,31 @@ export default function Hero({ onApply }) {
     <section className="hero-section" id="home" aria-labelledby="hero-title">
       <div className="hero-inner page-wrap">
         <Reveal className="hero-copy">
-          <div className="hero-kicker"><span className="hero-kicker__dot" /> A more approachable way to explore finance</div>
-          <h1 id="hero-title">Finance that <span>moves with you.</span></h1>
-          <p className="hero-description">Simple loan solutions, quick assistance and flexible options designed around your financial needs.</p>
+          <div className="hero-kicker">
+            <span className="hero-kicker__dot" /> {brandTagline} • PAN INDIA SERVICE
+          </div>
+          <h1 id="hero-title">Your Dreams, <span>Our Guidance.</span></h1>
+          <p className="hero-description">
+            Complete loan assistance tailored to your CIBIL score &amp; eligibility. Partnered with All Nationalized Banks, Top Corporate Banks &amp; registered NBFCs.
+          </p>
           <div className="hero-rotating-line">
-            <span className="hero-rotating-label">Explore</span>
-            <RotatingText texts={loanMessages} rotationInterval={2500} staggerDuration={0.017} className="hero-rotating-text" />
+            <span className="hero-rotating-label">Services</span>
+            <RotatingText texts={loanMessages} rotationInterval={1500} staggerDuration={0.015} className="hero-rotating-text" />
           </div>
           <div className="hero-actions">
             <button className="button button--primary button--large" type="button" onClick={onApply}>
               Apply for a Loan <ArrowRight size={17} aria-hidden="true" />
             </button>
-            <a className="button button--text button--large" href="#loans">
-              Explore Loans <ArrowRight size={16} aria-hidden="true" />
+            <a className="button button--wa button--large" href={whatsappUrl} target="_blank" rel="noreferrer">
+              <MessageCircle size={18} aria-hidden="true" /> WhatsApp: {formattedPhone}
             </a>
           </div>
-          <p className="hero-note">Every enquiry starts with a conversation. Options and terms depend on assessment.</p>
           <div className="hero-trust-cue">
-            <span className="hero-trust-cue__icon"><Sparkles size={15} aria-hidden="true" /></span>
-            <span><strong>Friendly, local guidance</strong><small>Clear next steps, without the pressure.</small></span>
+            <span className="hero-trust-cue__icon"><PhoneCall size={15} aria-hidden="true" /></span>
+            <span>
+              <strong>Direct Helpline: <a href={`tel:${contactPhone}`} className="hero-tel-link">{formattedPhone}</a></strong>
+              <small>Loan options matched to your CIBIL score &amp; profile</small>
+            </span>
           </div>
         </Reveal>
         <Reveal className="hero-art" delay={reduceMotion ? 0 : 0.08}>

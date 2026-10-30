@@ -1,18 +1,21 @@
-"use client";
-
+import Image from "next/image";
 import { useState } from "react";
 import {
   ArrowRight,
   ArrowUpRight,
+  Award,
   BadgeCheck,
   BriefcaseBusiness,
+  Building2,
   CarFront,
   Check,
   ChevronDown,
   CircleHelp,
   ClipboardCheck,
+  Eye,
   FileCheck2,
   FileText,
+  Globe,
   GraduationCap,
   HandCoins,
   HeartHandshake,
@@ -21,23 +24,31 @@ import {
   Layers3,
   LifeBuoy,
   MapPin,
+  Maximize2,
   MessageCircle,
+  Phone,
+  PhoneCall,
   Search,
   ShieldCheck,
   SlidersHorizontal,
   Sparkles,
   Star,
+  Target,
   UserRound,
   UserRoundCheck,
+  X,
 } from "lucide-react";
 import {
+  contactPhone,
   dllBenefits,
   faqItems,
   financialGoals,
+  formattedPhone,
+  founderInfo,
   loanTypes,
   processSteps,
-  testimonialPlaceholders,
   trustPoints,
+  whatsappUrl,
 } from "../data/siteContent";
 import { Reveal, SectionIntro } from "./MotionBits";
 
@@ -47,6 +58,9 @@ const iconMap = {
   CarFront,
   GraduationCap,
   House,
+  Building2,
+  Globe,
+  Target,
   Sparkles,
   ClipboardCheck,
   Layers3,
@@ -65,6 +79,8 @@ const iconMap = {
   CircleHelp,
   ShieldCheck,
   UserRoundCheck,
+  PhoneCall,
+  Award,
 };
 
 function LineIcon({ name, size = 21, strokeWidth = 1.8, ...props }) {
@@ -88,33 +104,126 @@ export function TrustBar() {
 }
 
 export function LoanSolutions({ onApply }) {
+  const [posterOpen, setPosterOpen] = useState(false);
+
   return (
     <section className="section loans-section" id="loans" aria-labelledby="loans-title">
       <div className="page-wrap">
         <SectionIntro
-          eyebrow="Loan solutions"
-          title="A range of ways to move forward."
-          description="Loan options can change. Explore the categories below, then speak with DLL to confirm current availability and understand the terms."
+          eyebrow="Types of Loans & Services"
+          title="All Banks • Corporate Banks • NBFCs"
+          description="Loan options tailored to your CIBIL score and eligibility. Explore our 6 core services and consult directly for seamless approval."
           id="loans-title"
         />
+
         <div className="loan-grid">
           {loanTypes.map((loan, index) => (
-            <Reveal as="article" className="loan-card" delay={index * 0.045} key={loan.id}>
+            <Reveal as="article" className="loan-card" delay={index * 0.04} key={loan.id}>
               <div className="loan-card__top">
-                <span className="icon-tile"><LineIcon name={loan.icon} size={23} /></span>
-                <span className="loan-card__spark" aria-hidden="true"><ArrowUpRight size={18} /></span>
+                <span className="icon-tile"><LineIcon name={loan.icon} size={24} /></span>
+                <span className="loan-badge">{loan.highlight}</span>
               </div>
+              <div className="loan-category-label">{loan.category}</div>
               <h3>{loan.title}</h3>
               <p>{loan.description}</p>
-              <div className="loan-card__benefit"><span className="benefit-check"><Check size={14} /></span>{loan.benefit}</div>
+              <div className="loan-card__benefit">
+                <span className="benefit-check"><Check size={14} /></span>
+                {loan.benefit}
+              </div>
               <div className="loan-card__actions">
-                <a className="text-link" href="#contact">Learn More <ArrowRight size={15} /></a>
-                <button className="button button--small button--outline" type="button" onClick={() => onApply(loan.title)}>Apply Now</button>
+                <button
+                  className="button button--small button--primary"
+                  type="button"
+                  onClick={() => onApply(loan.title)}
+                >
+                  Apply for {loan.title.split(" ")[0]} <ArrowRight size={15} />
+                </button>
+                <a
+                  className="whatsapp-quick-btn"
+                  href={`https://wa.me/918919995865?text=Hello%20Dhana%20Lakshmi%20Loans%2C%20I%20want%20to%20inquire%20about%20${encodeURIComponent(loan.title)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  title={`Chat on WhatsApp about ${loan.title}`}
+                >
+                  <MessageCircle size={16} /> WhatsApp
+                </a>
               </div>
             </Reveal>
           ))}
         </div>
-        <p className="section-footnote">Availability, suitability, eligibility and terms are confirmed by DLL after a discussion and assessment.</p>
+
+        {/* Official Banner & Partner Network Showcase */}
+        <div className="official-banner-card">
+          <div className="banner-card__art">
+            <div className="banner-image-preview" onClick={() => setPosterOpen(true)} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setPosterOpen(true)}>
+              <Image
+                src="/dll-services-banner.png"
+                alt="Official Dhanalakshmi Loans Services Poster"
+                width={260}
+                height={390}
+                className="banner-poster-thumb"
+              />
+              <span className="banner-zoom-badge"><Maximize2 size={15} /> Click to View Full Poster</span>
+            </div>
+          </div>
+          <div className="banner-card__info">
+            <span className="eyebrow eyebrow--on-blue">Official Lending Partner</span>
+            <h3>Your Dreams, Our Guidance</h3>
+            <p className="banner-card__subtitle">
+              We connect you with all Nationalized Banks, Top Corporate Banks, and registered NBFCs across India.
+            </p>
+            <div className="banner-highlights">
+              <div className="highlight-pill"><BadgeCheck size={16} /> PAN India Service</div>
+              <div className="highlight-pill"><Target size={16} /> CIBIL Score Matching</div>
+              <div className="highlight-pill"><Building2 size={16} /> All Major Banks & NBFCs</div>
+              <div className="highlight-pill"><Globe size={16} /> Full Passport Services</div>
+            </div>
+            <div className="banner-card__actions">
+              <a className="button button--yellow" href={`tel:${contactPhone}`}>
+                <PhoneCall size={16} /> Call {formattedPhone}
+              </a>
+              <button className="button button--outline-light" type="button" onClick={() => setPosterOpen(true)}>
+                <Eye size={16} /> View Official Poster
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Modal for Full-Size Poster */}
+        {posterOpen && (
+          <div className="poster-modal-overlay" onClick={() => setPosterOpen(false)} role="dialog" aria-modal="true">
+            <div className="poster-modal-content" onClick={(e) => e.stopPropagation()}>
+              <button
+                type="button"
+                className="poster-modal-close"
+                onClick={() => setPosterOpen(false)}
+                aria-label="Close poster view"
+              >
+                <X size={24} />
+              </button>
+              <div className="poster-modal-body">
+                <Image
+                  src="/dll-services-banner.png"
+                  alt="Dhanalakshmi Loans Official Services Flyer"
+                  width={680}
+                  height={1020}
+                  className="poster-modal-image"
+                  priority
+                />
+              </div>
+              <div className="poster-modal-footer">
+                <a className="button button--primary" href={`tel:${contactPhone}`}>
+                  <PhoneCall size={16} /> Call {formattedPhone}
+                </a>
+                <a className="button button--outline" href={whatsappUrl} target="_blank" rel="noreferrer">
+                  <MessageCircle size={16} /> WhatsApp Us
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <p className="section-footnote">Loan options, interest rates, and approval tenures are subject to bank terms, credit verification, and CIBIL score evaluation.</p>
       </div>
     </section>
   );
@@ -126,21 +235,27 @@ export function WhyDll() {
       <div className="page-wrap why-layout">
         <div className="why-intro">
           <SectionIntro
-            eyebrow="Why DLL"
-            title="Good guidance makes a difference."
-            description="A helpful conversation should make your choices easier to understand—not add pressure."
+            eyebrow="Why Choose DLL"
+            title="Good guidance makes all the difference."
+            description="With ties to All Banks, Corporate Banks, and NBFCs, we guide you to the loan that matches your exact financial profile."
             id="why-title"
           />
           <div className="why-note">
             <div className="why-note__mark"><ShieldCheck size={24} /></div>
-            <div><strong>Clear information. Considered choices.</strong><p>Take time to understand the terms and repayment commitment before deciding.</p></div>
+            <div>
+              <strong>Transparent Guidance • Zero Hassle</strong>
+              <p>Compare interest rates, tenure options, and processing terms with complete clarity before proceeding.</p>
+            </div>
           </div>
         </div>
         <div className="benefit-grid">
           {dllBenefits.map((benefit, index) => (
             <Reveal as="article" className="benefit-card" delay={index * 0.035} key={benefit.title}>
               <span className="benefit-card__icon"><LineIcon name={benefit.icon} size={20} /></span>
-              <div><h3>{benefit.title}</h3><p>{benefit.text}</p></div>
+              <div>
+                <h3>{benefit.title}</h3>
+                <p>{benefit.text}</p>
+              </div>
             </Reveal>
           ))}
         </div>
@@ -155,22 +270,25 @@ export function HowItWorks() {
       <div className="page-wrap">
         <SectionIntro
           eyebrow="How it works"
-          title="A clear path, one step at a time."
-          description="The exact steps and documents depend on the loan you discuss and DLL's assessment."
+          title="Fast, Transparent & Simple Process."
+          description="From initial profile consultation to final loan disbursal or passport receipt, we handle the complexity for you."
           align="center"
           id="process-title"
         />
         <div className="process-grid">
           {processSteps.map((step, index) => (
             <Reveal as="article" className="process-card" delay={index * 0.06} key={step.number}>
-              <div className="process-card__top"><span className="process-number">{step.number}</span><span className="process-icon"><LineIcon name={step.icon} size={21} /></span></div>
+              <div className="process-card__top">
+                <span className="process-number">{step.number}</span>
+                <span className="process-icon"><LineIcon name={step.icon} size={21} /></span>
+              </div>
               <h3>{step.title}</h3>
               <p>{step.text}</p>
               {index < processSteps.length - 1 && <span className="process-connector" aria-hidden="true"><ArrowRight size={18} /></span>}
             </Reveal>
           ))}
         </div>
-        <p className="process-disclaimer">An enquiry is not an approval or a promise of disbursal.</p>
+        <p className="process-disclaimer">Loan sanction, interest rates, and final disbursal are subject to lender underwriting and KYC verification.</p>
       </div>
     </section>
   );
@@ -181,57 +299,26 @@ export function FinancialGoals() {
     <section className="section goals-section" aria-labelledby="goals-title">
       <div className="page-wrap">
         <SectionIntro
-          eyebrow="For the things that matter"
-          title="Whatever your financial goal, we're here to help."
-          description="Start with the goal. Then take a considered look at the options and repayment commitment before borrowing."
+          eyebrow="Tailored Solutions"
+          title="Whatever your requirement, we have the right loan."
+          description="Explore financial support for every phase of life, education, business, and international travel."
           id="goals-title"
         />
         <div className="goals-grid">
           {financialGoals.map((goal, index) => (
             <Reveal as="article" className="goal-card" delay={(index % 4) * 0.045} key={goal.title}>
               <span className="goal-card__icon"><LineIcon name={goal.icon} size={20} /></span>
-              <div><h3>{goal.title}</h3><p>{goal.description}</p></div>
+              <div>
+                <h3>{goal.title}</h3>
+                <p>{goal.description}</p>
+              </div>
               <span className="goal-card__arrow" aria-hidden="true"><ArrowUpRight size={17} /></span>
             </Reveal>
           ))}
         </div>
-        <div className="responsible-note"><span className="responsible-note__icon"><ShieldCheck size={18} /></span><p>Borrow only after reviewing the costs and repayment schedule, and considering whether the commitment fits your circumstances.</p></div>
-      </div>
-    </section>
-  );
-}
-
-export function CustomerStories() {
-  return (
-    <section className="section stories-section" id="stories" aria-labelledby="stories-title">
-      <div className="page-wrap">
-        <div className="stories-heading-row">
-          <SectionIntro
-            eyebrow="Customer stories"
-            title="Your experience deserves to be heard."
-            description="These are layout placeholders—not real customer reviews. Replace them with approved, verified customer stories before publishing, or remove this section."
-            id="stories-title"
-          />
-          <div className="satisfaction-visual" aria-label="Illustrative customer satisfaction visual; not a measured score">
-            <span className="satisfaction-visual__icon"><HeartHandshake size={22} /></span>
-            <div><strong>Customer-first, always</strong><small>Satisfaction visual placeholder · no score claimed</small></div>
-          </div>
-        </div>
-        <div className="stories-grid">
-          {testimonialPlaceholders.map((story, index) => (
-            <Reveal as="article" className="story-card" delay={index * 0.06} key={story.id}>
-              <div className="story-card__flag"><span /> Placeholder — replace before publishing</div>
-              <div className="rating-placeholder" aria-label="Rating visualization placeholder, not a real customer rating">
-                {Array.from({ length: 5 }, (_, starIndex) => <Star key={starIndex} size={15} strokeWidth={1.8} aria-hidden="true" />)}
-                <span>Rating visual placeholder</span>
-              </div>
-              <p className="story-card__quote">“{story.quote}”</p>
-              <div className="story-card__person">
-                <span className="story-avatar"><UserRound size={18} aria-hidden="true" /></span>
-                <span><strong>Customer name placeholder</strong><small>{story.loanType}</small></span>
-              </div>
-            </Reveal>
-          ))}
+        <div className="responsible-note">
+          <span className="responsible-note__icon"><ShieldCheck size={18} /></span>
+          <p>We believe in responsible borrowing: we match you with affordable repayment plans that support your financial well-being.</p>
         </div>
       </div>
     </section>
@@ -242,26 +329,76 @@ export function AboutDll() {
   return (
     <section className="section about-section" id="about" aria-labelledby="about-title">
       <div className="page-wrap about-layout">
-        <Reveal className="about-illustration" aria-hidden="true">
-          <div className="about-illustration__sun" />
-          <div className="about-illustration__card about-illustration__card--one"><span className="about-mini-icon"><HeartHandshake size={20} /></span><span><b>People first</b><i>Listen · guide · support</i></span></div>
-          <div className="about-illustration__card about-illustration__card--two"><span className="about-mini-icon about-mini-icon--yellow"><Check size={19} /></span><span><b>Clear next steps</b><i>Understand before you decide</i></span></div>
-          <div className="about-illustration__path"><span /><span /><span /></div>
+        {/* Real Executive Portrait Presentation */}
+        <Reveal className="about-founder-card">
+          <div className="founder-image-wrapper">
+            <Image
+              src="/dhana-lakshmi-rekha.png"
+              alt="Dhana Lakshmi Rekha - Founder & Managing Director of Dhana Lakshmi Loans"
+              width={380}
+              height={480}
+              priority
+              className="founder-portrait"
+            />
+            <div className="founder-image-badge">
+              <Award size={18} />
+              <span>Founder &amp; Financial Consultant</span>
+            </div>
+          </div>
+          <div className="founder-card-meta">
+            <h4>{founderInfo.name}</h4>
+            <p className="founder-role">{founderInfo.title}</p>
+            <p className="founder-tagline">“{founderInfo.tagline}”</p>
+            <div className="founder-card-stats">
+              <div className="founder-stat-item">
+                <strong>PAN India</strong>
+                <small>Service Area</small>
+              </div>
+              <div className="founder-stat-item">
+                <strong>All Banks &amp; NBFCs</strong>
+                <small>Lending Network</small>
+              </div>
+              <div className="founder-stat-item">
+                <strong>6 Services</strong>
+                <small>Loans &amp; Passport</small>
+              </div>
+            </div>
+            <div className="founder-quick-actions">
+              <a className="button button--primary button--small" href={`tel:${founderInfo.phone}`}>
+                <PhoneCall size={15} /> Call {founderInfo.phone}
+              </a>
+              <a className="button button--outline button--small" href={whatsappUrl} target="_blank" rel="noreferrer">
+                <MessageCircle size={15} /> WhatsApp
+              </a>
+            </div>
+          </div>
         </Reveal>
+
         <div className="about-copy">
           <SectionIntro
-            eyebrow="About DLL"
-            title="Finance should feel easier to approach."
-            description="Dhana Lakshmi Loans is here to help customers explore accessible financial solutions with professional assistance and clear communication."
+            eyebrow="About Dhana Lakshmi Loans"
+            title="Your Dreams, Our Guidance."
+            description="Founded by Dhana Lakshmi Rekha, Dhana Lakshmi Loans is a premier financial advisory and loan facilitation firm based in Visakhapatnam, offering dedicated PAN-India support."
             id="about-title"
           />
-          <p className="about-extra">We start by understanding what matters to you, then help you explore the available options and the questions worth asking. No pressure to rush a decision.</p>
+          <p className="about-extra">
+            Navigating multiple banks, documentation guidelines, and fluctuating interest rates can be overwhelming. We streamline the entire journey by assessing your CIBIL score and profile eligibility, then matching you with the ideal public sector bank, private corporate bank, or NBFC.
+          </p>
           <ul className="about-values">
-            <li><span><Check size={15} /></span> Customer-first service</li>
-            <li><span><Check size={15} /></span> Accessible financial solutions</li>
-            <li><span><Check size={15} /></span> Professional, transparent guidance</li>
+            <li><span><Check size={15} /></span> <b>Education, Personal, Home, Vehicle &amp; Mortgage Loans</b></li>
+            <li><span><Check size={15} /></span> <b>Full Passport Documentation &amp; Appointment Services</b></li>
+            <li><span><Check size={15} /></span> <b>Tie-ups across All Nationalized &amp; Corporate Banks and NBFCs</b></li>
+            <li><span><Check size={15} /></span> <b>Personalized CIBIL score analysis for maximum loan approval</b></li>
+            <li><span><Check size={15} /></span> <b>Direct assistance with complete transparency and zero hidden fees</b></li>
           </ul>
-          <a href="#contact" className="text-link text-link--strong">Talk with the DLL team <ArrowRight size={16} /></a>
+          <div className="about-actions-row">
+            <a href="#contact" className="button button--primary">
+              Book a Consultation <ArrowRight size={16} />
+            </a>
+            <a href={`tel:${founderInfo.phone}`} className="text-link text-link--strong">
+              Direct Helpline: {founderInfo.formattedPhone} <ArrowUpRight size={16} />
+            </a>
+          </div>
         </div>
       </div>
     </section>
