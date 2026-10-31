@@ -85,6 +85,12 @@ async function autoRefreshLongLivedToken(token, appId, appSecret) {
   return token;
 }
 
+const NO_CACHE_HEADERS = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0",
+  "CDN-Cache-Control": "no-store",
+  "Vercel-CDN-Cache-Control": "no-store",
+};
+
 export async function GET() {
   const fallbackPosts = getFallbackPosts();
   const { token, igAccountId } = getEnvCredentials();
@@ -98,9 +104,7 @@ export async function GET() {
         data: fallbackPosts,
       },
       {
-        headers: {
-          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-        },
+        headers: NO_CACHE_HEADERS,
       }
     );
   }
@@ -109,12 +113,17 @@ export async function GET() {
     const fields = "id,caption,media_type,media_url,thumbnail_url,permalink,timestamp";
     const endpoint = `https://graph.facebook.com/v20.0/${igAccountId}/media?fields=${fields}&access_token=${token}&limit=12`;
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
+
     const res = await fetch(endpoint, {
       cache: "no-store",
+      signal: controller.signal,
       headers: {
         "Cache-Control": "no-cache",
       },
     });
+    clearTimeout(timeoutId);
 
     if (!res.ok) {
       const errData = await res.json().catch(() => ({}));
@@ -127,9 +136,7 @@ export async function GET() {
           data: fallbackPosts,
         },
         {
-          headers: {
-            "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-          },
+          headers: NO_CACHE_HEADERS,
         }
       );
     }
@@ -158,9 +165,7 @@ export async function GET() {
           data: items,
         },
         {
-          headers: {
-            "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-          },
+          headers: NO_CACHE_HEADERS,
         }
       );
     }
@@ -172,9 +177,7 @@ export async function GET() {
         data: fallbackPosts,
       },
       {
-        headers: {
-          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-        },
+        headers: NO_CACHE_HEADERS,
       }
     );
   } catch (error) {
@@ -187,9 +190,7 @@ export async function GET() {
         data: fallbackPosts,
       },
       {
-        headers: {
-          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-        },
+        headers: NO_CACHE_HEADERS,
       }
     );
   }

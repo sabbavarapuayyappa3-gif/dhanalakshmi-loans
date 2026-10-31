@@ -37,11 +37,27 @@ export default function InstagramFeed() {
 
   useEffect(() => {
     loadInstagramPosts();
-    // Auto sync with Instagram every 60 seconds
+
+    // Fast auto-sync every 8 seconds so uploads & deletes reflect rapidly
     const interval = setInterval(() => {
       loadInstagramPosts();
-    }, 60000);
-    return () => clearInterval(interval);
+    }, 8000);
+
+    // Instant sync whenever user returns to the website tab after uploading/deleting on Instagram
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        loadInstagramPosts();
+      }
+    };
+
+    window.addEventListener("focus", handleVisibility);
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("focus", handleVisibility);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   }, [loadInstagramPosts]);
 
   const togglePlay = (id, isVideo) => {
